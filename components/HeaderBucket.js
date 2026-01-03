@@ -1,6 +1,6 @@
 "use client";
 
-export function Header({ onSearchClick }) {
+export function Header() {
     return (
         <header className="px-6 pt-8 pb-4 md:px-8 md:pt-10">
             <div className="flex items-center justify-center max-w-5xl mx-auto">

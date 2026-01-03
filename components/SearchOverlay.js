@@ -89,7 +89,7 @@ export function SearchOverlay({ isOpen, onClose }) {
                 {query.length > 1 && results.length === 0 && (
                     <div className="text-center py-16">
                         <p className="text-muted-foreground italic">
-                            No experiences found for "{query}"
+                            No experiences found for &quot;{query}&quot;
                         </p>
                     </div>
                 )}

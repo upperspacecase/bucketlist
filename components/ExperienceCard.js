@@ -16,7 +16,6 @@ export function ExperienceCard({
     location,
     image,
     category,
-    year,
     savedCount,
     difficulty,
     bestTime,

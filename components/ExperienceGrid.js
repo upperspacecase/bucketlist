@@ -3,16 +3,34 @@
 import { useState, useEffect } from "react";
 import { ExperienceCard } from "./ExperienceCard";
 import { ExperienceCardSkeleton } from "./ExperienceCardSkeleton";
-import { experiences } from "@/libs/experiences";
 
 export function ExperienceGrid({ activeCategory, activeRegion }) {
     const [loading, setLoading] = useState(true);
+    const [experiences, setExperiences] = useState([]);
 
     useEffect(() => {
-        setLoading(true);
-        const timer = setTimeout(() => setLoading(false), 600);
-        return () => clearTimeout(timer);
-    }, [activeCategory, activeRegion]);
+        const fetchExperiences = async () => {
+            try {
+                setLoading(true);
+                const res = await fetch("/api/experiences");
+                const data = await res.json();
+                if (data.experiences) {
+                    // Map MongoDB _id to id for components
+                    const normalized = data.experiences.map((exp) => ({
+                        ...exp,
+                        id: exp._id,
+                    }));
+                    setExperiences(normalized);
+                }
+            } catch (error) {
+                console.error("Failed to fetch experiences:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchExperiences();
+    }, []);
 
     const filteredExperiences = experiences.filter((exp) => {
         const categoryMatch =
@@ -34,7 +52,11 @@ export function ExperienceGrid({ activeCategory, activeRegion }) {
                         <ExperienceCardSkeleton key={i} />
                     ))
                     : filteredExperiences.map((experience, index) => (
-                        <ExperienceCard key={experience.id} {...experience} index={index} />
+                        <ExperienceCard
+                            key={experience.id}
+                            {...experience}
+                            index={index}
+                        />
                     ))}
             </div>
 

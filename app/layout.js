@@ -1,17 +1,18 @@
-import { Source_Serif_4, JetBrains_Mono } from "next/font/google";
+import { Inter, Archivo_Black } from "next/font/google";
 import { getSEOTags } from "@/libs/seo";
 import ClientLayout from "@/components/LayoutClient";
 import config from "@/config";
 import "./globals.css";
 
-const sourceSerif = Source_Serif_4({
+const inter = Inter({
 	subsets: ["latin"],
-	variable: "--font-serif",
+	variable: "--font-sans",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const archivoBlack = Archivo_Black({
+	weight: "400",
 	subsets: ["latin"],
-	variable: "--font-mono",
+	variable: "--font-display",
 });
 
 export const viewport = {
@@ -23,20 +24,20 @@ export const viewport = {
 
 // This adds default SEO tags to all pages in our app.
 export const metadata = getSEOTags({
-	title: "bucketlist_inspo - Amazing Experiences Worldwide",
-	description:
-		"Discover incredible bucket list experiences and adventures from around the world. Your ultimate travel inspiration directory.",
+	title: "Bucket List - Life Goals & Adventures",
+	description: "Track and share your life's greatest adventures.",
 });
 
 export default function RootLayout({ children }) {
 	return (
 		<html
 			lang="en"
-			data-theme={config.colors.theme}
-			className={`${sourceSerif.variable} ${jetbrainsMono.variable} bg-background`}
+			className={`${inter.variable} ${archivoBlack.variable} bg-background`}
 		>
-			<body className="font-serif antialiased">
-				<ClientLayout>{children}</ClientLayout>
+			<body className="font-sans antialiased text-foreground">
+				<div className="mobile-container flex flex-col">
+					<ClientLayout>{children}</ClientLayout>
+				</div>
 			</body>
 		</html>
 	);

@@ -10,10 +10,18 @@ const ListItem = ({
     const [isExpanded, setIsExpanded] = useState(false);
     const { title, addedBy, category, completed, image } = item;
 
-    // Category styling based on "Travel" (Pink) vs others (Grey/Default)
-    const categoryColor = category?.toUpperCase() === "TRAVEL" || category?.toUpperCase() === "FESTIVAL"
-        ? "bg-accent border-black"
-        : "bg-[#E5E5E5] border-black"; // Grey for Adventure etc.
+    // Category styling: Pink for Travel/Festival, Green for Adventure/Fitness/Learning, Grey for others
+    const getCategoryColor = (cat) => {
+        const upper = cat?.toUpperCase();
+        if (upper === "TRAVEL" || upper === "FESTIVALS" || upper === "FESTIVAL") {
+            return "bg-accent border-black"; // Pink
+        }
+        if (upper === "ADVENTURE" || upper === "FITNESS" || upper === "LEARNING" || upper === "NATURE" || upper === "CULTURE") {
+            return "bg-secondary border-black"; // Green
+        }
+        return "bg-[#E5E5E5] border-black"; // Grey
+    };
+    const categoryColor = getCategoryColor(category);
 
     return (
         <div className={`relative bg-white border-2 border-black w-full transition-all ${completed ? "opacity-75" : ""}`}>
@@ -24,7 +32,10 @@ const ListItem = ({
                 {/* Checkbox Section */}
                 <div className="w-[60px] border-r-2 border-black flex items-center justify-center shrink-0">
                     <button
-                        onClick={() => onToggle?.(!completed)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onToggle?.(!completed);
+                        }}
                         className={`w-8 h-8 border-2 border-black flex items-center justify-center transition-colors
               ${completed ? "bg-secondary" : "bg-white hover:bg-gray-100"}
             `}
@@ -69,7 +80,13 @@ const ListItem = ({
                     <div className="p-3 flex justify-between items-center bg-gray-50">
                         <span className="text-xs font-bold">DETAILS</span>
                         {onDelete && (
-                            <button onClick={onDelete} className="text-xs font-bold underline decoration-2 decoration-black hover:bg-black hover:text-white px-1">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDelete?.();
+                                }}
+                                className="text-xs font-bold underline decoration-2 decoration-black hover:bg-black hover:text-white px-1"
+                            >
                                 DELETE
                             </button>
                         )}

@@ -9,6 +9,18 @@ const FeedCard = ({
     image,
     category = "ADVENTURE"
 }) => {
+    // Category styling: Pink for Travel/Festival, Green for Adventure/Fitness/Learning
+    const getCategoryColor = (cat) => {
+        const upper = cat?.toUpperCase();
+        if (upper === "TRAVEL" || upper === "FESTIVALS" || upper === "FESTIVAL") {
+            return "bg-accent"; // Pink
+        }
+        if (upper === "ADVENTURE" || upper === "FITNESS" || upper === "LEARNING" || upper === "NATURE" || upper === "CULTURE") {
+            return "bg-secondary"; // Green
+        }
+        return "bg-[#E5E5E5]"; // Grey
+    };
+
     return (
         <div className="bg-white border-2 border-black mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             {/* Header */}
@@ -39,7 +51,7 @@ const FeedCard = ({
 
             {/* Content */}
             <div className="p-4">
-                <span className="bg-secondary border border-black text-[10px] font-bold px-2 py-0.5 uppercase mb-2 inline-block">
+                <span className={`${getCategoryColor(category)} border border-black text-[10px] font-bold px-2 py-0.5 uppercase mb-2 inline-block`}>
                     {category}
                 </span>
                 <h2 className="text-xl font-black uppercase mb-2 leading-tight">

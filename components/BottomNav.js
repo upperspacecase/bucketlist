@@ -1,9 +1,10 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 const BottomNav = () => {
+    const router = useRouter();
     const pathname = usePathname();
     const [activeTab, setActiveTab] = useState("mylist");
 
@@ -79,7 +80,7 @@ const BottomNav = () => {
                             key={item.id}
                             onClick={() => {
                                 setActiveTab(item.id);
-                                // router.push(item.path); // Commented out for now as pages might not exist
+                                router.push(item.path);
                             }}
                             className={`flex-1 flex flex-col items-center justify-center gap-1 transition-all duration-200 
                 ${isActive ? "bg-primary" : "bg-white hover:bg-gray-50"}`}

@@ -38,6 +38,15 @@ const experienceSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        // New fields for app functionality
+        completed: {
+            type: Boolean,
+            default: false,
+        },
+        addedBy: {
+            type: String,
+            default: "You",
+        },
         difficulty: {
             type: String,
             required: true,

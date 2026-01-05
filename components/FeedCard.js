@@ -9,17 +9,8 @@ const FeedCard = ({
     image,
     category = "ADVENTURE"
 }) => {
-    // Category styling: Pink for Travel/Festival, Green for Adventure/Fitness/Learning
-    const getCategoryColor = (cat) => {
-        const upper = cat?.toUpperCase();
-        if (upper === "TRAVEL" || upper === "FESTIVALS" || upper === "FESTIVAL") {
-            return "bg-accent"; // Pink
-        }
-        if (upper === "ADVENTURE" || upper === "FITNESS" || upper === "LEARNING" || upper === "NATURE" || upper === "CULTURE") {
-            return "bg-secondary"; // Green
-        }
-        return "bg-[#E5E5E5]"; // Grey
-    };
+    // All category tags are pink
+    const getCategoryColor = () => "bg-accent";
 
     return (
         <div className="bg-white border-2 border-black mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">

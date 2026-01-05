@@ -8,26 +8,25 @@
   --font-sans: "Inter", "Helvetica Neue", sans-serif;
   --font-display: "Archivo Black", "Inter", sans-serif;
 
-  /* Neo-Brutalism Palette - Exact HEX from mockup */
-  --color-background: #FFFEF5;
-  /* Cream */
-  --color-foreground: #1A1A1A;
-  /* Near Black */
+  /* Neo-Brutalism Palette - Final HEX codes */
+  --color-background: #FEFFF5;
+  /* Off-white/Cream */
+  --color-foreground: #000000;
+  /* Black */
 
-  --color-primary: #FFE500;
-  /* Yellow */
-  --color-secondary: #3CB371;
-  /* Green */
-  --color-accent: #FF69B4;
-  /* Pink/Magenta */
+  --color-primary: #FDE02C;
+  /* Bright Gold/Yellow */
+  --color-secondary: #10AD31;
+  /* Jade Green */
+  --color-accent: #F383BB;
+  /* Pink Carnation */
 
-  --color-border: #1A1A1A;
+  --color-border: #000000;
   --color-muted: #888888;
-  /* Gray for secondary text */
 
   /* UI Elements */
   --color-card: #FFFFFF;
-  --color-card-foreground: #1A1A1A;
+  --color-card-foreground: #000000;
 
   /* Utilities */
   --radius-none: 0px;
@@ -35,9 +34,9 @@
   --radius-md: 0px;
   --radius-lg: 0px;
 
-  --shadow-neo: 4px 4px 0px 0px #1A1A1A;
-  --shadow-neo-sm: 2px 2px 0px 0px #1A1A1A;
-  --shadow-neo-lg: 6px 6px 0px 0px #1A1A1A;
+  --shadow-neo: 4px 4px 0px 0px #000000;
+  --shadow-neo-sm: 2px 2px 0px 0px #000000;
+  --shadow-neo-lg: 6px 6px 0px 0px #000000;
 }
 
 /* Base resets */

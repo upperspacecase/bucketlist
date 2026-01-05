@@ -10,18 +10,8 @@ const ListItem = ({
     const [isExpanded, setIsExpanded] = useState(false);
     const { title, addedBy, category, completed, image } = item;
 
-    // Category styling: Pink for Travel/Festival, Green for Adventure/Fitness/Learning, Grey for others
-    const getCategoryColor = (cat) => {
-        const upper = cat?.toUpperCase();
-        if (upper === "TRAVEL" || upper === "FESTIVALS" || upper === "FESTIVAL") {
-            return "bg-accent border-black"; // Pink
-        }
-        if (upper === "ADVENTURE" || upper === "FITNESS" || upper === "LEARNING" || upper === "NATURE" || upper === "CULTURE") {
-            return "bg-secondary border-black"; // Green
-        }
-        return "bg-[#E5E5E5] border-black"; // Grey
-    };
-    const categoryColor = getCategoryColor(category);
+    // All tags are pink (accent color)
+    const categoryColor = "bg-accent border-black";
 
     return (
         <div className={`relative bg-white border-2 border-black w-full transition-all ${completed ? "opacity-75" : ""}`}>

@@ -6,11 +6,11 @@ const Header = () => {
       <div className="flex justify-between items-center">
         {/* Logotype */}
         <h1 className="text-2xl tracking-tighter font-black">
-          <span className="text-accent">BUCKET</span>
+          <span className="text-black">BUCKET</span>
           <span className="text-secondary">LIST</span>
         </h1>
 
-        {/* Decorative Dots */}
+        {/* Decorative Dots - Yellow, Green, Pink */}
         <div className="flex gap-2">
           <div className="w-3 h-3 rounded-full bg-primary border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"></div>
           <div className="w-3 h-3 rounded-full bg-secondary border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"></div>

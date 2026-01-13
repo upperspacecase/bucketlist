@@ -119,6 +119,7 @@ const rawCsvData = [
 import { NextResponse } from "next/server";
 import connectMongo from "@/libs/mongoose";
 import Experience from "@/models/Experience";
+import { auth } from "@/libs/auth";
 
 // Curated list of high-quality Unsplash images for various categories
 const curatedImages = [
@@ -182,13 +183,23 @@ const mapToSchema = (item, index) => {
 
 export async function GET() {
     try {
+        const session = await auth();
+        if (!session?.user?.id) {
+            return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+        }
+
         await connectMongo();
 
-        // Clear existing experiences
-        await Experience.deleteMany({});
+        // Clear only THIS user's experiences (do not wipe the whole database)
+        await Experience.deleteMany({ userId: session.user.id });
 
         console.log("Seeding new CSV data...");
-        const experiencesData = rawCsvData.map(mapToSchema);
+        const experiencesData = rawCsvData.map((row, index) => ({
+            ...mapToSchema(row, index),
+            userId: session.user.id,
+            addedBy: session.user.name || "You",
+            completed: false,
+        }));
 
         await Experience.insertMany(experiencesData);
 

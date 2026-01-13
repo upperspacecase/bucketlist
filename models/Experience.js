@@ -9,27 +9,32 @@ const experienceSchema = new mongoose.Schema(
         },
         location: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
+            default: "Worldwide",
         },
         country: {
             type: String,
-            required: true,
+            required: false,
             trim: true,
+            default: "Worldwide",
         },
         image: {
             type: String,
-            required: true,
+            required: false,
+            default: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&h=600&fit=crop",
         },
         category: {
             type: String,
-            required: true,
+            required: false,
             enum: ["Adventure", "Culture", "Nature", "Food", "Festivals", "Wellness"],
+            default: "Adventure",
         },
         region: {
             type: String,
-            required: true,
+            required: false,
             enum: ["asia", "europe", "africa", "americas", "oceania"],
+            default: "americas",
         },
         year: {
             type: String,
@@ -39,6 +44,11 @@ const experienceSchema = new mongoose.Schema(
             default: 0,
         },
         // New fields for app functionality
+        userId: {
+            type: String,
+            required: true,
+            index: true, // Index for faster queries
+        },
         completed: {
             type: Boolean,
             default: false,
@@ -49,8 +59,9 @@ const experienceSchema = new mongoose.Schema(
         },
         difficulty: {
             type: String,
-            required: true,
+            required: false,
             enum: ["easy", "moderate", "bucket-list"],
+            default: "easy",
         },
         bestTime: {
             type: String,

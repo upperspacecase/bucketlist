@@ -1,42 +1,37 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
 import FeedCard from "@/components/FeedCard";
+import toast from "react-hot-toast";
 
 export default function FeedPage() {
-    const feedItems = [
-        {
-            id: 1,
-            user: "ALEX",
-            action: "COMPLETED",
-            date: "JAN 2",
-            title: "SEE THE NORTHERN LIGHTS",
-            description: "Finally witnessed the aurora in Norway!",
-            image: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&h=600&fit=crop",
-            category: "ADVENTURE"
-        },
-        {
-            id: 2,
-            user: "SARAH",
-            action: "WANTS TO DO",
-            date: "JAN 1",
-            title: "SKYDIVING IN DUBAI",
-            description: "Looking for someone to join me on this craziness!",
-            image: "https://images.unsplash.com/photo-1529520935529-68875ea48937?w=800&h=600&fit=crop",
-            category: "ADVENTURE"
-        },
-        {
-            id: 3,
-            user: "MIKE",
-            action: "COMPLETED",
-            date: "DEC 30",
-            title: "LEARN TO SURF",
-            description: "Caught my first wave in Bali. Harder than it looks but so worth it.",
-            image: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=800&h=600&fit=crop",
-            category: "SPORT"
-        }
-    ];
+    const [feedItems, setFeedItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchFeed = async () => {
+            try {
+                setLoading(true);
+                const res = await fetch("/api/feed");
+                if (!res.ok) {
+                    throw new Error("Failed to load feed");
+                }
+                const data = await res.json();
+                if (data.feedItems) {
+                    setFeedItems(data.feedItems);
+                }
+            } catch (error) {
+                console.error("fetchFeed Error:", error);
+                toast.error("Failed to load feed");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchFeed();
+    }, []);
 
     return (
         <div className="min-h-screen bg-background pb-32 font-sans text-foreground">
@@ -47,9 +42,17 @@ export default function FeedPage() {
                     WHAT EVERYONE&apos;S DOING
                 </h2>
 
-                {feedItems.map((item) => (
-                    <FeedCard key={item.id} {...item} />
-                ))}
+                {loading ? (
+                    <div className="text-center py-10 font-bold animate-pulse">LOADING...</div>
+                ) : feedItems.length === 0 ? (
+                    <div className="text-center py-10 text-gray-400 font-bold">
+                        NO COMPLETED ITEMS YET
+                    </div>
+                ) : (
+                    feedItems.map((item) => (
+                        <FeedCard key={item.id} {...item} />
+                    ))
+                )}
             </main>
 
             <BottomNav />

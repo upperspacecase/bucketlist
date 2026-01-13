@@ -13,6 +13,18 @@ export function ExperienceGrid({ activeCategory, activeRegion }) {
             try {
                 setLoading(true);
                 const res = await fetch("/api/experiences");
+                
+                if (res.status === 401) {
+                    // User is not authenticated, but don't redirect from this component
+                    // Let the parent page handle authentication
+                    setExperiences([]);
+                    return;
+                }
+                
+                if (!res.ok) {
+                    throw new Error(`Failed to fetch experiences: ${res.status}`);
+                }
+                
                 const data = await res.json();
                 if (data.experiences) {
                     // Map MongoDB _id to id for components

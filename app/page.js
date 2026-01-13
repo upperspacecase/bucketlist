@@ -20,6 +20,17 @@ export default function Home() {
     try {
       // Don't set loading true on refetch to avoid flicker
       const res = await fetch("/api/experiences");
+      
+      if (res.status === 401) {
+        // User is not authenticated, redirect to login
+        window.location.href = "/api/auth/signin";
+        return;
+      }
+      
+      if (!res.ok) {
+        throw new Error(`Failed to load list: ${res.status}`);
+      }
+      
       const data = await res.json();
       if (data.experiences) {
         // Map MongoDB _id to id
@@ -28,10 +39,12 @@ export default function Home() {
           id: exp._id,
         }));
         setExperiences(normalized);
+      } else if (data.error) {
+        throw new Error(data.error);
       }
     } catch (error) {
       console.error("fetchExperiences Error:", error);
-      toast.error("Failed to load list");
+      toast.error(error.message || "Failed to load list");
     } finally {
       setLoading(false);
     }
@@ -54,10 +67,19 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, completed: !currentStatus }),
       });
-      if (!res.ok) throw new Error("Failed to update status");
+      
+      if (res.status === 401) {
+        window.location.href = "/api/auth/signin";
+        return;
+      }
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to update status");
+      }
     } catch (error) {
       console.error("handleToggle Error:", error);
-      toast.error("Failed to update status");
+      toast.error(error.message || "Failed to update status");
       // Revert optimism
       setExperiences(prev => prev.map(e =>
         e.id === id ? { ...e, completed: currentStatus } : e
@@ -76,11 +98,21 @@ export default function Home() {
       const res = await fetch(`/api/experiences?id=${id}`, {
         method: "DELETE"
       });
-      if (!res.ok) throw new Error("Failed to delete");
+      
+      if (res.status === 401) {
+        window.location.href = "/api/auth/signin";
+        return;
+      }
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to delete");
+      }
+      
       toast.success("Item deleted");
     } catch (error) {
       console.error("handleDelete Error:", error);
-      toast.error("Failed to delete item");
+      toast.error(error.message || "Failed to delete item");
       fetchExperiences(); // Revert
     }
   };
@@ -101,6 +133,17 @@ export default function Home() {
           category: "Adventure"
         }),
       });
+      
+      if (res.status === 401) {
+        window.location.href = "/api/auth/signin";
+        return;
+      }
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to add item");
+      }
+      
       const data = await res.json();
       if (data.experience) {
         setExperiences(prev => [{ ...data.experience, id: data.experience._id }, ...prev]);
@@ -112,7 +155,7 @@ export default function Home() {
       }
     } catch (error) {
       console.error("handleSubmitAdd Error:", error);
-      toast.error("Failed to add item");
+      toast.error(error.message || "Failed to add item");
     }
   };
 

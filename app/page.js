@@ -20,7 +20,7 @@ export default function LandingPage() {
                     {/* Main headline */}
                     <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
                         Life is short.<br />
-                        <span className="text-primary">Don't waste the day.</span>
+                        <span className="text-primary">Don&apos;t waste the day.</span>
                     </h2>
 
                     <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-10">

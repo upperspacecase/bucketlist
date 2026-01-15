@@ -8,7 +8,7 @@ import ListItem from "@/components/ListItem";
 import toast from "react-hot-toast";
 
 export default function MyListPage() {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isLoaded, isSignedIn } = useUser();
   const [activeTab, setActiveTab] = useState("all");
   const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,6 +38,7 @@ export default function MyListPage() {
 
   useEffect(() => {
     if (isLoaded) fetchExperiences();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, isSignedIn]);
 
   const handleToggle = async (id, currentStatus) => {
@@ -49,7 +50,7 @@ export default function MyListPage() {
         body: JSON.stringify({ id, completed: !currentStatus }),
       });
       if (!res.ok) throw new Error("Failed to update");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update status");
       setExperiences(prev => prev.map(e => e.id === id ? { ...e, completed: currentStatus } : e));
     }
@@ -62,7 +63,7 @@ export default function MyListPage() {
       const res = await fetch(`/api/experiences?id=${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete");
       toast.success("Item deleted");
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete item");
       fetchExperiences();
     }
@@ -85,7 +86,7 @@ export default function MyListPage() {
         setNewItemTitle("");
         setIsAdding(false);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to add item");
     }
   };

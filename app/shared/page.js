@@ -29,7 +29,7 @@ export default function SharedPage() {
             if (!res.ok) throw new Error("Failed to load shared lists");
             const data = await res.json();
             if (data.sharedLists) setSharedLists(data.sharedLists);
-        } catch (error) {
+        } catch {
             toast.error("Failed to load shared lists");
         } finally {
             setLoading(false);
@@ -53,7 +53,7 @@ export default function SharedPage() {
                 setNewListName("");
                 setIsCreating(false);
             }
-        } catch (error) {
+        } catch {
             toast.error("Failed to create list");
         }
     };
@@ -75,7 +75,7 @@ export default function SharedPage() {
                 setNewItemTitle("");
                 setAddingToIndex(null);
             }
-        } catch (error) {
+        } catch {
             toast.error("Failed to add item");
         }
     };
@@ -92,7 +92,7 @@ export default function SharedPage() {
             if (data.sharedList) {
                 setSharedLists(prev => prev.map(list => list._id === sharedListId ? data.sharedList : list));
             }
-        } catch (error) {
+        } catch {
             toast.error("Failed to update item");
         }
     };

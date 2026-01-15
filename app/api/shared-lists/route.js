@@ -1,23 +1,22 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import connectMongo from "@/libs/mongoose";
 import SharedList from "@/models/SharedList";
-import { auth } from "@/libs/auth";
 
 export async function GET() {
     try {
-        const session = await auth();
-        
-        if (!session?.user?.id) {
+        const { userId } = await auth();
+
+        if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         await connectMongo();
-        
-        // Get all shared lists where user is a participant
+
         const sharedLists = await SharedList.find({
             $or: [
-                { createdBy: session.user.id },
-                { participants: session.user.id }
+                { createdBy: userId },
+                { participants: userId }
             ]
         }).sort({ updatedAt: -1 });
 
@@ -30,25 +29,23 @@ export async function GET() {
 
 export async function POST(req) {
     try {
-        const session = await auth();
-        
-        if (!session?.user?.id) {
+        const { userId } = await auth();
+
+        if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         await connectMongo();
         const body = await req.json();
 
-        // Validation
         if (!body.name || !body.name.trim()) {
             return NextResponse.json({ error: "List name is required" }, { status: 400 });
         }
 
-        // Create shared list with creator as first participant
         const newSharedList = await SharedList.create({
             name: body.name,
-            createdBy: session.user.id,
-            participants: [session.user.id, ...(body.participants || [])],
+            createdBy: userId,
+            participants: [userId, ...(body.participants || [])],
             items: [],
         });
 
@@ -61,9 +58,9 @@ export async function POST(req) {
 
 export async function PATCH(req) {
     try {
-        const session = await auth();
-        
-        if (!session?.user?.id) {
+        const { userId } = await auth();
+
+        if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
@@ -75,26 +72,18 @@ export async function PATCH(req) {
             return NextResponse.json({ error: "Shared list ID required" }, { status: 400 });
         }
 
-        // Verify user is a participant
         const sharedList = await SharedList.findById(id);
         if (!sharedList) {
             return NextResponse.json({ error: "Shared list not found" }, { status: 404 });
         }
 
-        const isParticipant = sharedList.createdBy === session.user.id || 
-                              sharedList.participants.includes(session.user.id);
-        
+        const isParticipant = sharedList.createdBy === userId || sharedList.participants.includes(userId);
+
         if (!isParticipant) {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
-        // Update the shared list
-        const updatedSharedList = await SharedList.findByIdAndUpdate(
-            id,
-            updates,
-            { new: true }
-        );
-
+        const updatedSharedList = await SharedList.findByIdAndUpdate(id, updates, { new: true });
         return NextResponse.json({ sharedList: updatedSharedList });
     } catch (error) {
         console.error("PATCH /api/shared-lists error:", error);

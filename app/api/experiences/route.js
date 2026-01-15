@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import connectMongo from "@/libs/mongoose";
 import Experience from "@/models/Experience";
-import { auth } from "@/libs/auth";
 
 // GET - Public access to all experiences
 export async function GET() {
     try {
         await connectMongo();
-        // Return ALL experiences (public feed)
         const experiences = await Experience.find({}).sort({ createdAt: -1 });
         return NextResponse.json({ experiences });
     } catch (error) {
@@ -19,9 +18,9 @@ export async function GET() {
 // POST - Requires auth to add new items
 export async function POST(req) {
     try {
-        const session = await auth();
+        const { userId } = await auth();
 
-        if (!session?.user?.id) {
+        if (!userId) {
             return NextResponse.json({ error: "Sign in to add items" }, { status: 401 });
         }
 
@@ -34,9 +33,9 @@ export async function POST(req) {
 
         const newExperience = await Experience.create({
             ...body,
-            userId: session.user.id,
+            userId,
             completed: false,
-            addedBy: session.user.name || "You",
+            addedBy: "You",
             image: body.image || "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&h=600&fit=crop",
             location: body.location || "Worldwide",
             country: body.country || "Worldwide",
@@ -55,9 +54,9 @@ export async function POST(req) {
 // PATCH - Requires auth to update items
 export async function PATCH(req) {
     try {
-        const session = await auth();
+        const { userId } = await auth();
 
-        if (!session?.user?.id) {
+        if (!userId) {
             return NextResponse.json({ error: "Sign in to update items" }, { status: 401 });
         }
 
@@ -72,17 +71,11 @@ export async function PATCH(req) {
             return NextResponse.json({ error: "Experience not found" }, { status: 404 });
         }
 
-        // Allow update if user owns it OR if it has no userId (legacy/public data)
-        if (experience.userId && experience.userId !== session.user.id) {
+        if (experience.userId && experience.userId !== userId) {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
-        const updatedExperience = await Experience.findByIdAndUpdate(
-            id,
-            updates,
-            { new: true }
-        );
-
+        const updatedExperience = await Experience.findByIdAndUpdate(id, updates, { new: true });
         return NextResponse.json({ experience: updatedExperience });
     } catch (error) {
         console.error("PATCH /api/experiences error:", error);
@@ -93,9 +86,9 @@ export async function PATCH(req) {
 // DELETE - Requires auth to delete items
 export async function DELETE(req) {
     try {
-        const session = await auth();
+        const { userId } = await auth();
 
-        if (!session?.user?.id) {
+        if (!userId) {
             return NextResponse.json({ error: "Sign in to delete items" }, { status: 401 });
         }
 
@@ -110,13 +103,11 @@ export async function DELETE(req) {
             return NextResponse.json({ error: "Experience not found" }, { status: 404 });
         }
 
-        // Allow delete if user owns it OR if it has no userId (legacy/public data)
-        if (experience.userId && experience.userId !== session.user.id) {
+        if (experience.userId && experience.userId !== userId) {
             return NextResponse.json({ error: "Forbidden" }, { status: 403 });
         }
 
         await Experience.findByIdAndDelete(id);
-
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("DELETE /api/experiences error:", error);

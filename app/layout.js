@@ -1,8 +1,9 @@
 import { Inter, Archivo_Black } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import { getSEOTags } from "@/libs/seo";
-import ClientLayout from "@/components/LayoutClient";
 import config from "@/config";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -22,7 +23,6 @@ export const viewport = {
 	maximumScale: 1,
 };
 
-// This adds default SEO tags to all pages in our app.
 export const metadata = getSEOTags({
 	title: "Bucket List - Life Goals & Adventures",
 	description: "Track and share your life's greatest adventures.",
@@ -30,15 +30,18 @@ export const metadata = getSEOTags({
 
 export default function RootLayout({ children }) {
 	return (
-		<html
-			lang="en"
-			className={`${inter.variable} ${archivoBlack.variable} bg-background`}
-		>
-			<body className="font-sans antialiased text-foreground">
-				<div className="mobile-container flex flex-col">
-					<ClientLayout>{children}</ClientLayout>
-				</div>
-			</body>
-		</html>
+		<ClerkProvider>
+			<html
+				lang="en"
+				className={`${inter.variable} ${archivoBlack.variable} bg-background`}
+			>
+				<body className="font-sans antialiased text-foreground">
+					<div className="mobile-container flex flex-col">
+						{children}
+					</div>
+					<Toaster toastOptions={{ duration: 3000 }} />
+				</body>
+			</html>
+		</ClerkProvider>
 	);
 }

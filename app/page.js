@@ -1,254 +1,100 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Header from "@/components/Header";
-import BottomNav from "@/components/BottomNav";
-import TabFilter from "@/components/TabFilter";
-import ListItem from "@/components/ListItem";
-import toast from "react-hot-toast";
+import Link from "next/link";
 
-export default function Home() {
-  const [activeTab, setActiveTab] = useState("all");
-  const [experiences, setExperiences] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function LandingPage() {
+    return (
+        <div className="min-h-screen bg-background text-foreground">
+            {/* Hero Section */}
+            <header className="relative overflow-hidden">
+                {/* Background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-background to-background"></div>
 
-  const [isAdding, setIsAdding] = useState(false);
-  const [newItemTitle, setNewItemTitle] = useState("");
+                <div className="relative max-w-4xl mx-auto px-6 pt-16 pb-24 text-center">
+                    {/* Logo */}
+                    <h1 className="text-2xl tracking-[0.15em] font-semibold mb-16">
+                        <span className="text-white">BUCKET</span>
+                        <span className="text-primary">LIST</span>
+                    </h1>
 
-  const fetchExperiences = async () => {
-    try {
-      const res = await fetch("/api/experiences");
+                    {/* Main headline */}
+                    <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
+                        Life is short.<br />
+                        <span className="text-primary">Don't waste the day.</span>
+                    </h2>
 
-      if (!res.ok) {
-        throw new Error(`Failed to load list: ${res.status}`);
-      }
+                    <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-10">
+                        Track your bucket list experiences, share with friends, and discover what others are doing around the world.
+                    </p>
 
-      const data = await res.json();
-      if (data.experiences) {
-        const normalized = data.experiences.map((exp) => ({
-          ...exp,
-          id: exp._id,
-        }));
-        setExperiences(normalized);
-      } else if (data.error) {
-        throw new Error(data.error);
-      }
-    } catch (error) {
-      console.error("fetchExperiences Error:", error);
-      toast.error(error.message || "Failed to load list");
-    } finally {
-      setLoading(false);
-    }
-  };
+                    {/* CTA Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <Link
+                            href="/app"
+                            className="px-8 py-4 bg-primary text-background font-semibold rounded-xl hover:brightness-110 transition-all"
+                        >
+                            Get Started
+                        </Link>
+                        <Link
+                            href="/feed"
+                            className="px-8 py-4 bg-white/10 text-white font-medium rounded-xl hover:bg-white/20 transition-all"
+                        >
+                            Explore Feed
+                        </Link>
+                    </div>
+                </div>
+            </header>
 
-  useEffect(() => {
-    fetchExperiences();
-  }, []);
+            {/* Features Section */}
+            <section className="max-w-md mx-auto px-6 py-16">
+                <div className="flex flex-col gap-4">
+                    <div className="bg-card rounded-xl p-6">
+                        <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                                <rect x="3" y="5" width="6" height="6" rx="1" />
+                                <path d="m3 17 2 2 4-4" />
+                                <path d="M13 6h8" />
+                                <path d="M13 12h8" />
+                                <path d="M13 18h8" />
+                            </svg>
+                        </div>
+                        <h3 className="text-white font-semibold mb-2">Track Your Goals</h3>
+                        <p className="text-muted-foreground text-sm">Add experiences to your list and check them off as you go.</p>
+                    </div>
 
-  const handleToggle = async (id, currentStatus) => {
-    setExperiences(prev => prev.map(e =>
-      e.id === id ? { ...e, completed: !currentStatus } : e
-    ));
+                    <div className="bg-card rounded-xl p-6">
+                        <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                        </div>
+                        <h3 className="text-white font-semibold mb-2">Share with Friends</h3>
+                        <p className="text-muted-foreground text-sm">Create shared lists and accomplish goals together.</p>
+                    </div>
 
-    try {
-      const res = await fetch("/api/experiences", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, completed: !currentStatus }),
-      });
+                    <div className="bg-card rounded-xl p-6">
+                        <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="2" x2="22" y1="12" y2="12" />
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
+                        </div>
+                        <h3 className="text-white font-semibold mb-2">Discover Ideas</h3>
+                        <p className="text-muted-foreground text-sm">See what others are adding to their bucket lists worldwide.</p>
+                    </div>
+                </div>
+            </section>
 
-      if (res.status === 401) {
-        toast.error("Sign in to save changes");
-        setExperiences(prev => prev.map(e =>
-          e.id === id ? { ...e, completed: currentStatus } : e
-        ));
-        return;
-      }
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to update status");
-      }
-    } catch (error) {
-      console.error("handleToggle Error:", error);
-      toast.error(error.message || "Failed to update status");
-      setExperiences(prev => prev.map(e =>
-        e.id === id ? { ...e, completed: currentStatus } : e
-      ));
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this?")) return;
-
-    setExperiences(prev => prev.filter(e => e.id !== id));
-
-    try {
-      const res = await fetch(`/api/experiences?id=${id}`, {
-        method: "DELETE"
-      });
-
-      if (res.status === 401) {
-        toast.error("Sign in to delete items");
-        fetchExperiences();
-        return;
-      }
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to delete");
-      }
-
-      toast.success("Item deleted");
-    } catch (error) {
-      console.error("handleDelete Error:", error);
-      toast.error(error.message || "Failed to delete item");
-      fetchExperiences();
-    }
-  };
-
-  const handleSubmitAdd = async (e) => {
-    e.preventDefault();
-    if (!newItemTitle.trim()) return;
-
-    try {
-      const res = await fetch("/api/experiences", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: newItemTitle,
-          category: "Adventure"
-        }),
-      });
-
-      if (res.status === 401) {
-        toast.error("Sign in to add items");
-        return;
-      }
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to add item");
-      }
-
-      const data = await res.json();
-      if (data.experience) {
-        setExperiences(prev => [{ ...data.experience, id: data.experience._id }, ...prev]);
-        toast.success("Added to list!");
-        setNewItemTitle("");
-        setIsAdding(false);
-      } else {
-        throw new Error("No data returned");
-      }
-    } catch (error) {
-      console.error("handleSubmitAdd Error:", error);
-      toast.error(error.message || "Failed to add item");
-    }
-  };
-
-  const filteredExperiences = experiences.filter((exp) => {
-    if (activeTab === "all") return true;
-    if (activeTab === "todo") return !exp.completed;
-    if (activeTab === "done") return exp.completed;
-    return true;
-  });
-
-  const completedCount = experiences.filter(e => e.completed).length;
-  const totalCount = experiences.length;
-  const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
-
-  return (
-    <div className="min-h-screen bg-background pb-24 font-sans text-foreground">
-      <Header />
-
-      <main className="px-5 pt-6 max-w-md mx-auto">
-        {/* Section header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg tracking-[0.15em] font-semibold text-white">
-            Bucket List
-          </h2>
-          <span className="text-primary text-sm font-medium">
-            {completedCount}/{totalCount}
-          </span>
+            {/* Footer */}
+            <footer className="border-t border-white/10 py-8">
+                <div className="max-w-4xl mx-auto px-6 text-center text-muted-foreground text-sm">
+                    <p>© 2026 BucketList. Make every moment count.</p>
+                </div>
+            </footer>
         </div>
-
-        {/* Progress bar */}
-        <div className="h-1 bg-white/10 rounded-full mb-6 overflow-hidden">
-          <div
-            className="h-full bg-primary transition-all duration-500 rounded-full"
-            style={{ width: `${progressPercent}%` }}
-          ></div>
-        </div>
-
-        <TabFilter activeTab={activeTab} onTabChange={setActiveTab} />
-
-        {/* Add new item */}
-        {isAdding ? (
-          <form onSubmit={handleSubmitAdd} className="mb-6 bg-card rounded-xl p-4">
-            <input
-              autoFocus
-              type="text"
-              placeholder="Enter item title..."
-              className="w-full bg-transparent border-b border-white/20 text-white font-medium outline-none mb-4 pb-2 placeholder:text-muted-foreground"
-              value={newItemTitle}
-              onChange={(e) => setNewItemTitle(e.target.value)}
-            />
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setIsAdding(false)}
-                className="flex-1 py-3 text-xs font-medium text-muted-foreground bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={!newItemTitle.trim()}
-                className="flex-1 py-3 text-xs font-medium bg-primary text-background rounded-lg hover:brightness-110 transition-all disabled:opacity-50"
-              >
-                Add Item
-              </button>
-            </div>
-          </form>
-        ) : (
-          <button
-            onClick={() => setIsAdding(true)}
-            className="w-full py-4 mb-6 border border-dashed border-white/20 rounded-xl font-medium text-muted-foreground hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Add to Bucket List
-          </button>
-        )}
-
-        {/* List items */}
-        <div className="flex flex-col gap-3">
-          {loading ? (
-            <div className="text-center py-10 text-muted-foreground">
-              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-              Loading...
-            </div>
-          ) : (
-            filteredExperiences.map((item) => (
-              <ListItem
-                key={item.id}
-                item={item}
-                onToggle={() => handleToggle(item.id, item.completed)}
-                onDelete={() => handleDelete(item.id)}
-              />
-            ))
-          )}
-          {!loading && filteredExperiences.length === 0 && (
-            <div className="text-center py-10 text-muted-foreground">
-              No items found
-            </div>
-          )}
-        </div>
-      </main>
-
-      <BottomNav />
-    </div>
-  );
+    );
 }

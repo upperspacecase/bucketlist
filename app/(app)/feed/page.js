@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
-import BottomNav from "@/components/BottomNav";
 import FeedCard from "@/components/FeedCard";
 import toast from "react-hot-toast";
 
@@ -60,8 +59,6 @@ export default function FeedPage() {
                     ))
                 )}
             </main>
-
-            <BottomNav />
         </div>
     );
 }

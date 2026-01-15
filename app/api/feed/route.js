@@ -5,30 +5,28 @@ import Experience from "@/models/Experience";
 export async function GET() {
     try {
         await connectMongo();
-        
-        // Get all completed experiences from all users, sorted by completion date (most recent first)
-        // We'll use updatedAt to approximate when it was completed
-        const experiences = await Experience.find({ 
-            completed: true 
-        })
-        .sort({ updatedAt: -1 })
-        .limit(50); // Limit to 50 most recent
+
+        // Get ALL experiences from all users, sorted by most recent first
+        const experiences = await Experience.find({})
+            .sort({ createdAt: -1 })
+            .limit(100);
 
         // Format experiences for feed
         const feedItems = experiences.map((exp) => {
-            const completedDate = new Date(exp.updatedAt);
-            const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-            const formattedDate = `${monthNames[completedDate.getMonth()]} ${completedDate.getDate()}`;
+            const addedDate = new Date(exp.createdAt);
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const formattedDate = `${monthNames[addedDate.getMonth()]} ${addedDate.getDate()}`;
 
             return {
                 id: exp._id.toString(),
                 user: exp.addedBy || "Anonymous",
-                action: "COMPLETED",
+                action: exp.completed ? "completed" : "added",
                 date: formattedDate,
                 title: exp.title,
-                description: exp.tips || `Completed ${exp.title} in ${exp.location}!`,
+                description: exp.tips || exp.location || "Bucket list experience",
                 image: exp.image,
-                category: exp.category?.toUpperCase() || "ADVENTURE"
+                category: exp.category || "Adventure",
+                completed: exp.completed
             };
         });
 

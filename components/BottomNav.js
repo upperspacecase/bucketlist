@@ -9,7 +9,7 @@ const BottomNav = () => {
     const [activeTab, setActiveTab] = useState("mylist");
 
     useEffect(() => {
-        if (pathname === "/") setActiveTab("mylist");
+        if (pathname === "/" || pathname === "/app") setActiveTab("mylist");
         else if (pathname.includes("shared")) setActiveTab("shared");
         else if (pathname.includes("feed")) setActiveTab("feed");
     }, [pathname]);
@@ -18,7 +18,7 @@ const BottomNav = () => {
         {
             id: "mylist",
             label: "My List",
-            path: "/",
+            path: "/app",
             icon: (
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="5" width="6" height="6" rx="1" />

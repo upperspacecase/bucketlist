@@ -1,42 +1,38 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
-  themes: light --default;
+  themes: dark --default;
 }
 
 @theme {
   --font-sans: "Inter", "Helvetica Neue", sans-serif;
-  --font-display: "Archivo Black", "Inter", sans-serif;
+  --font-display: "Inter", "Helvetica Neue", sans-serif;
 
-  /* Neo-Brutalism Palette - Final HEX codes */
-  --color-background: #FEFFF5;
-  /* Off-white/Cream */
-  --color-foreground: #000000;
-  /* Black */
+  /* Dark Cinematic Palette - Disney+ Inspired */
+  --color-background: #0a0a0a;
+  --color-foreground: #ffffff;
 
-  --color-primary: #FDE02C;
-  /* Bright Gold/Yellow */
-  --color-secondary: #10AD31;
-  /* Jade Green */
-  --color-accent: #F383BB;
-  /* Pink Carnation */
+  --color-primary: #c9a227;
+  /* Gold accent */
+  --color-secondary: #1a1a1a;
+  /* Card backgrounds */
+  --color-accent: #c9a227;
+  /* Gold for CTAs */
 
-  --color-border: #000000;
-  --color-muted: #888888;
+  --color-border: #2a2a2a;
+  --color-muted: #6b6b6b;
+  --color-muted-foreground: #888888;
 
   /* UI Elements */
-  --color-card: #FFFFFF;
-  --color-card-foreground: #000000;
+  --color-card: #141414;
+  --color-card-foreground: #ffffff;
 
-  /* Utilities */
+  /* Utilities - Rounded corners like streaming apps */
   --radius-none: 0px;
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
-
-  --shadow-neo: 4px 4px 0px 0px #000000;
-  --shadow-neo-sm: 2px 2px 0px 0px #000000;
-  --shadow-neo-lg: 6px 6px 0px 0px #000000;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
 }
 
 /* Base resets */
@@ -54,30 +50,39 @@ h4,
 h5,
 h6 {
   font-family: var(--font-display);
-  font-weight: 900;
-  letter-spacing: -0.05em;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
-/* Custom Component Utilities */
-.btn-neo {
-  @apply bg-white border-2 border-black text-black font-bold uppercase transition-all;
-  box-shadow: 2px 2px 0px 0px #000000;
+/* Custom utilities for streaming style */
+.btn-stream {
+  @apply bg-primary text-background font-semibold uppercase tracking-wider rounded-md px-6 py-3 transition-all;
 }
 
-.btn-neo:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px 0px #000000;
+.btn-stream:hover {
+  @apply brightness-110;
 }
 
-.btn-neo:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px 0px #000000;
+.btn-stream-outline {
+  @apply bg-transparent border border-white/30 text-white font-medium uppercase tracking-wider rounded-md px-6 py-3 transition-all;
 }
 
-.card-neo {
-  @apply bg-white border-2 border-black;
-  box-shadow: 4px 4px 0px 0px #000000;
+.btn-stream-outline:hover {
+  @apply bg-white/10 border-white/50;
+}
+
+.card-stream {
+  @apply bg-card rounded-lg overflow-hidden transition-transform duration-300;
+}
+
+.card-stream:hover {
+  @apply scale-105;
+}
+
+/* Gradient overlays for cards */
+.gradient-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);
 }
 
 /* Hide scrollbar */
@@ -92,5 +97,41 @@ h6 {
 
 /* Layout helpers */
 .mobile-container {
-  @apply max-w-md mx-auto min-h-screen bg-background relative border-x-2 border-black/5;
+  @apply max-w-md mx-auto min-h-screen bg-background relative;
+}
+
+/* Glass effect for overlays */
+.glass {
+  @apply bg-white/10 backdrop-blur-xl;
+}
+
+/* Fade animations */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-slide-up {
+  animation: fadeSlideUp 0.4s ease-out forwards;
+}
+
+/* Section headers */
+.section-header {
+  @apply text-sm tracking-[0.2em] uppercase text-muted-foreground font-medium;
+}
+
+/* Gold link styling */
+.link-gold {
+  @apply text-primary uppercase tracking-wider text-sm font-medium transition-colors;
+}
+
+.link-gold:hover {
+  @apply brightness-125;
 }

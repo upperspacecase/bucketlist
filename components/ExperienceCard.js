@@ -31,7 +31,7 @@ export function ExperienceCard({
     return (
         <>
             <article
-                className="group bg-card rounded-xl overflow-hidden shadow-sm cursor-pointer animate-fade-slide-up hover:shadow-md transition-shadow"
+                className="group bg-card rounded-xl overflow-hidden cursor-pointer animate-fade-slide-up transition-transform duration-300 hover:scale-[1.02]"
                 style={{ animationDelay: `${index * 50}ms` }}
                 onClick={() => setExpanded(true)}
             >
@@ -40,8 +40,11 @@ export function ExperienceCard({
                     <img
                         src={image || "/placeholder.svg"}
                         alt={title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
+
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
 
                     {/* Like button */}
                     <button
@@ -49,13 +52,13 @@ export function ExperienceCard({
                             e.stopPropagation();
                             toggleSaved(id);
                         }}
-                        className="absolute top-3 right-3 p-2.5 bg-card/90 backdrop-blur-sm rounded-full transition-all hover:bg-card min-h-[44px] min-w-[44px] flex items-center justify-center shadow-sm"
+                        className="absolute top-3 right-3 p-2.5 bg-black/40 backdrop-blur-sm rounded-full transition-all hover:bg-black/60 min-h-[44px] min-w-[44px] flex items-center justify-center"
                         aria-label={liked ? "Remove from favorites" : "Add to favorites"}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
+                            width="18"
+                            height="18"
                             viewBox="0 0 24 24"
                             fill={liked ? "currentColor" : "none"}
                             stroke="currentColor"
@@ -64,7 +67,7 @@ export function ExperienceCard({
                             strokeLinejoin="round"
                             className={cn(
                                 "transition-colors",
-                                liked ? "text-foreground" : "text-foreground"
+                                liked ? "text-primary" : "text-white"
                             )}
                         >
                             <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
@@ -72,43 +75,52 @@ export function ExperienceCard({
                     </button>
 
                     {/* Difficulty badge */}
-                    <div className="absolute bottom-3 left-3 px-3 py-1 bg-card/90 backdrop-blur-sm rounded-full text-[10px] tracking-wider uppercase">
+                    <div className="absolute bottom-3 left-3 px-3 py-1 bg-black/40 backdrop-blur-sm rounded-full text-[10px] tracking-wider uppercase text-white">
                         {difficultyLabels[difficulty]}
+                    </div>
+
+                    {/* Title overlay at bottom */}
+                    <div className="absolute bottom-3 right-3 left-14">
+                        <h3 className="text-white text-sm font-medium leading-snug text-right line-clamp-2">
+                            {title}
+                        </h3>
                     </div>
                 </div>
 
                 {/* Content section */}
                 <div className="p-4">
-                    <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2">
-                        {category}
-                    </p>
-                    <h3 className="text-base font-normal leading-snug text-balance mb-1">
-                        {title}
-                    </h3>
-                    <p className="text-sm italic text-muted-foreground">{location}</p>
-                    <p className="text-[11px] text-muted-foreground mt-3">
-                        {savedCount.toLocaleString()} have this on their list
-                    </p>
+                    <div className="flex justify-between items-start gap-2">
+                        <div>
+                            <p className="text-[10px] tracking-[0.15em] uppercase text-primary mb-1">
+                                {category}
+                            </p>
+                            <p className="text-sm text-muted-foreground">{location}</p>
+                        </div>
+                        <p className="text-[11px] text-muted-foreground whitespace-nowrap">
+                            {savedCount.toLocaleString()} saved
+                        </p>
+                    </div>
                 </div>
             </article>
 
+            {/* Expanded Modal */}
             {expanded && (
                 <div
-                    className="fixed inset-0 bg-foreground/20 backdrop-blur-sm z-50 flex items-end justify-center"
+                    className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end justify-center"
                     onClick={() => setExpanded(false)}
                 >
                     <div
-                        className="bg-card w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-2xl animate-fade-slide-up shadow-xl"
+                        className="bg-card w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-2xl animate-fade-slide-up"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}
-                        <div className="sticky top-0 bg-card rounded-t-2xl p-4 flex items-center justify-between border-b border-border">
+                        <div className="sticky top-0 bg-card rounded-t-2xl p-4 flex items-center justify-between border-b border-white/10">
                             <span className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground">
                                 Experience Details
                             </span>
                             <button
                                 onClick={() => setExpanded(false)}
-                                className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-muted rounded-full transition-colors"
+                                className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-white/10 rounded-full transition-colors"
                                 aria-label="Close"
                             >
                                 <svg
@@ -121,6 +133,7 @@ export function ExperienceCard({
                                     strokeWidth="2"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
+                                    className="text-white"
                                 >
                                     <path d="M18 6 6 18" />
                                     <path d="m6 6 12 12" />
@@ -135,22 +148,23 @@ export function ExperienceCard({
                                 alt={title}
                                 className="w-full h-full object-cover"
                             />
+                            <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent"></div>
                         </div>
 
                         {/* Content */}
-                        <div className="p-6">
-                            <p className="text-[11px] tracking-[0.15em] uppercase text-muted-foreground mb-2">
+                        <div className="p-6 -mt-8 relative z-10">
+                            <p className="text-[11px] tracking-[0.15em] uppercase text-primary mb-2">
                                 {category} · {difficultyLabels[difficulty]}
                             </p>
 
-                            <h2 className="text-2xl font-normal leading-snug text-balance mb-1">
+                            <h2 className="text-2xl font-semibold leading-snug text-white mb-1">
                                 {title}
                             </h2>
-                            <p className="text-base italic text-muted-foreground mb-6">
+                            <p className="text-base text-muted-foreground mb-6">
                                 {location}
                             </p>
 
-                            <div className="space-y-0 border-t border-border">
+                            <div className="space-y-0 border-t border-white/10">
                                 {bestTime && (
                                     <DetailRow icon="clock" label="Best Time" value={bestTime} />
                                 )}
@@ -165,7 +179,7 @@ export function ExperienceCard({
                                         href={website}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center justify-between py-4 text-left min-h-[44px] border-b border-border group/link"
+                                        className="flex items-center justify-between py-4 text-left min-h-[44px] border-b border-white/10 group/link"
                                     >
                                         <div className="flex items-center gap-3">
                                             <svg
@@ -183,7 +197,7 @@ export function ExperienceCard({
                                                 <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                                                 <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                                             </svg>
-                                            <span className="text-sm font-normal">Visit Website</span>
+                                            <span className="text-sm text-white">Visit Website</span>
                                         </div>
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -212,10 +226,10 @@ export function ExperienceCard({
                             <button
                                 onClick={() => toggleSaved(id)}
                                 className={cn(
-                                    "w-full py-4 flex items-center justify-center gap-2 text-sm tracking-wide transition-all min-h-[44px] rounded-full",
+                                    "w-full py-4 flex items-center justify-center gap-2 text-sm tracking-wide transition-all min-h-[44px] rounded-xl font-medium",
                                     liked
-                                        ? "bg-foreground text-background"
-                                        : "bg-accent text-accent-foreground hover:brightness-95"
+                                        ? "bg-white/10 text-white border border-white/20"
+                                        : "bg-primary text-background hover:brightness-110"
                                 )}
                             >
                                 <svg
@@ -231,7 +245,7 @@ export function ExperienceCard({
                                 >
                                     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
                                 </svg>
-                                {liked ? "Saved to My List" : "+ Add to My List"}
+                                {liked ? "Saved to My List" : "Add to My List"}
                             </button>
                         </div>
                     </div>
@@ -244,25 +258,8 @@ export function ExperienceCard({
 function DetailRow({ icon, label, value }) {
     const [open, setOpen] = useState(false);
 
-    const iconPaths = {
-        clock: <path d="M12 6v6l4 2" />,
-        dollar: (
-            <>
-                <line x1="12" x2="12" y1="2" y2="22" />
-                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </>
-        ),
-        lightbulb: (
-            <>
-                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
-                <path d="M9 18h6" />
-                <path d="M10 22h4" />
-            </>
-        ),
-    };
-
     return (
-        <div className="border-b border-border">
+        <div className="border-b border-white/10">
             <button
                 onClick={() => setOpen(!open)}
                 className="w-full flex items-center justify-between py-4 text-left min-h-[44px]"
@@ -286,10 +283,21 @@ function DetailRow({ icon, label, value }) {
                                 <path d="M12 6v6l4 2" />
                             </>
                         )}
-                        {icon === "dollar" && iconPaths.dollar}
-                        {icon === "lightbulb" && iconPaths.lightbulb}
+                        {icon === "dollar" && (
+                            <>
+                                <line x1="12" x2="12" y1="2" y2="22" />
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                            </>
+                        )}
+                        {icon === "lightbulb" && (
+                            <>
+                                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+                                <path d="M9 18h6" />
+                                <path d="M10 22h4" />
+                            </>
+                        )}
                     </svg>
-                    <span className="text-sm font-normal">{label}</span>
+                    <span className="text-sm text-white">{label}</span>
                 </div>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

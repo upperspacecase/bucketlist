@@ -34,19 +34,25 @@ export default function FeedPage() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-background pb-32 font-sans text-foreground">
+        <div className="min-h-screen bg-background pb-24 font-sans text-foreground">
             <Header />
 
-            <main className="px-5 pt-8 max-w-md mx-auto">
-                <h2 className="text-2xl font-black mb-6 uppercase tracking-tighter">
-                    WHAT EVERYONE&apos;S DOING
-                </h2>
+            <main className="px-5 pt-6 max-w-md mx-auto">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-lg tracking-[0.15em] font-semibold text-white">
+                        Discover
+                    </h2>
+                    <span className="link-gold">See All</span>
+                </div>
 
                 {loading ? (
-                    <div className="text-center py-10 font-bold animate-pulse">LOADING...</div>
+                    <div className="text-center py-10 text-muted-foreground">
+                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                        Loading...
+                    </div>
                 ) : feedItems.length === 0 ? (
-                    <div className="text-center py-10 text-gray-400 font-bold">
-                        NO COMPLETED ITEMS YET
+                    <div className="text-center py-10 text-muted-foreground">
+                        No completed items yet
                     </div>
                 ) : (
                     feedItems.map((item) => (

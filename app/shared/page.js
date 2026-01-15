@@ -23,16 +23,11 @@ export default function SharedPage() {
         try {
             setLoading(true);
             const res = await fetch("/api/shared-lists");
-            
-            if (res.status === 401) {
-                window.location.href = "/api/auth/signin";
-                return;
-            }
-            
+
             if (!res.ok) {
                 throw new Error("Failed to load shared lists");
             }
-            
+
             const data = await res.json();
             if (data.sharedLists) {
                 setSharedLists(data.sharedLists);
@@ -57,7 +52,7 @@ export default function SharedPage() {
             });
 
             if (res.status === 401) {
-                window.location.href = "/api/auth/signin";
+                toast.error("Sign in to create shared lists");
                 return;
             }
 
@@ -95,7 +90,7 @@ export default function SharedPage() {
             });
 
             if (res.status === 401) {
-                window.location.href = "/api/auth/signin";
+                toast.error("Sign in to add items");
                 return;
             }
 
@@ -106,7 +101,7 @@ export default function SharedPage() {
 
             const data = await res.json();
             if (data.sharedList) {
-                setSharedLists(prev => prev.map(list => 
+                setSharedLists(prev => prev.map(list =>
                     list._id === sharedListId ? data.sharedList : list
                 ));
                 toast.success("Item added!");
@@ -132,7 +127,7 @@ export default function SharedPage() {
             });
 
             if (res.status === 401) {
-                window.location.href = "/api/auth/signin";
+                toast.error("Sign in to update items");
                 return;
             }
 
@@ -143,7 +138,7 @@ export default function SharedPage() {
 
             const data = await res.json();
             if (data.sharedList) {
-                setSharedLists(prev => prev.map(list => 
+                setSharedLists(prev => prev.map(list =>
                     list._id === sharedListId ? data.sharedList : list
                 ));
             }
@@ -170,22 +165,24 @@ export default function SharedPage() {
     };
 
     return (
-        <div className="min-h-screen bg-background pb-32 font-sans text-foreground">
+        <div className="min-h-screen bg-background pb-24 font-sans text-foreground">
             <Header />
 
-            <main className="px-5 pt-8 max-w-md mx-auto">
-                <h2 className="text-2xl font-black mb-6 uppercase tracking-tighter">
-                    SHARED LISTS
-                </h2>
+            <main className="px-5 pt-6 max-w-md mx-auto">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-lg tracking-[0.15em] font-semibold text-white">
+                        Shared Lists
+                    </h2>
+                </div>
 
                 {/* Create Shared List */}
                 {isCreating ? (
-                    <form onSubmit={handleCreateList} className="mb-8 border-2 border-black p-4 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                    <form onSubmit={handleCreateList} className="mb-6 bg-card rounded-xl p-4">
                         <input
                             autoFocus
                             type="text"
                             placeholder="Enter list name..."
-                            className="w-full border-b-2 border-black font-bold outline-none mb-4 uppercase placeholder:text-gray-300"
+                            className="w-full bg-transparent border-b border-white/20 text-white font-medium outline-none mb-4 pb-2 placeholder:text-muted-foreground"
                             value={newListName}
                             onChange={(e) => setNewListName(e.target.value)}
                         />
@@ -196,73 +193,77 @@ export default function SharedPage() {
                                     setIsCreating(false);
                                     setNewListName("");
                                 }}
-                                className="flex-1 py-3 text-xs font-bold border-2 border-black hover:bg-gray-50 uppercase"
+                                className="flex-1 py-3 text-xs font-medium text-muted-foreground bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={!newListName.trim()}
-                                className="flex-1 py-3 text-xs font-bold bg-primary border-2 border-black hover:brightness-110 uppercase disabled:opacity-50"
+                                className="flex-1 py-3 text-xs font-medium bg-primary text-background rounded-lg hover:brightness-110 transition-all disabled:opacity-50"
                             >
                                 Create List
                             </button>
                         </div>
                     </form>
                 ) : (
-                    <button 
+                    <button
                         onClick={() => setIsCreating(true)}
-                        className="w-full py-6 mb-8 border-2 border-dashed border-black font-bold uppercase tracking-wide bg-white hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                        className="w-full py-4 mb-6 border border-dashed border-white/20 rounded-xl font-medium text-muted-foreground hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
-                        CREATE SHARED LIST
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                        Create Shared List
                     </button>
                 )}
 
                 {loading ? (
-                    <div className="text-center py-10 font-bold animate-pulse">LOADING...</div>
+                    <div className="text-center py-10 text-muted-foreground">
+                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                        Loading...
+                    </div>
                 ) : sharedLists.length === 0 ? (
-                    <div className="text-center py-10 text-gray-400 font-bold">
-                        NO SHARED LISTS YET
+                    <div className="text-center py-10 text-muted-foreground">
+                        No shared lists yet
                     </div>
                 ) : (
                     sharedLists.map((list) => {
                         const isExpanded = expandedLists.has(list._id.toString());
                         const completedCount = getCompletedCount(list.items || []);
                         const totalCount = list.items?.length || 0;
+                        const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
                         return (
-                            <div key={list._id} className="border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-6">
-                                <div 
-                                    className="flex items-center justify-between p-4 border-b-2 border-black cursor-pointer hover:bg-gray-50"
+                            <div key={list._id} className="bg-card rounded-xl overflow-hidden mb-4">
+                                <div
+                                    className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors"
                                     onClick={() => toggleListExpanded(list._id.toString())}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="flex -space-x-4">
+                                        <div className="flex -space-x-2">
                                             {list.participants?.slice(0, 3).map((userId, idx) => (
-                                                <div key={idx} className={`w-8 h-8 rounded-full bg-gray-${300 + idx * 100} border border-black z-${idx * 10}`}>
-                                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userId}`} alt={`User ${idx + 1}`} />
+                                                <div key={idx} className="w-8 h-8 rounded-full overflow-hidden border-2 border-card">
+                                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userId}`} alt={`User ${idx + 1}`} className="w-full h-full" />
                                                 </div>
                                             ))}
                                         </div>
                                         <div>
-                                            <h3 className="font-bold uppercase text-sm">{list.name}</h3>
-                                            <p className="text-[10px] text-gray-500 font-mono">
+                                            <h3 className="font-medium text-white text-sm">{list.name}</h3>
+                                            <p className="text-[11px] text-muted-foreground">
                                                 {completedCount}/{totalCount} done
                                             </p>
                                         </div>
                                     </div>
-                                    <svg 
-                                        xmlns="http://www.w3.org/2000/svg" 
-                                        width="20" 
-                                        height="20" 
-                                        viewBox="0 0 24 24" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        strokeWidth="2" 
-                                        strokeLinecap="round" 
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="18"
+                                        height="18"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
                                         strokeLinejoin="round"
-                                        className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                                        className={`text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                                     >
                                         <path d="m6 9 6 6 6-6" />
                                     </svg>
@@ -270,24 +271,25 @@ export default function SharedPage() {
 
                                 {isExpanded && (
                                     <>
-                                        <div className="h-1.5 w-full bg-gray-100 border-b-2 border-black flex">
-                                            <div 
-                                                className="h-full bg-secondary transition-all duration-500"
-                                                style={{ width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%` }}
+                                        {/* Progress bar */}
+                                        <div className="h-1 bg-white/10 mx-4">
+                                            <div
+                                                className="h-full bg-primary transition-all duration-500 rounded-full"
+                                                style={{ width: `${progressPercent}%` }}
                                             ></div>
                                         </div>
 
-                                        <div className="bg-white">
+                                        <div className="p-4 pt-3 border-t border-white/10 mt-3">
                                             {addingToIndex === list._id.toString() ? (
-                                                <form 
+                                                <form
                                                     onSubmit={(e) => handleAddItem(list._id.toString(), e)}
-                                                    className="p-3 border-b-2 border-black"
+                                                    className="mb-3"
                                                 >
                                                     <input
                                                         autoFocus
                                                         type="text"
                                                         placeholder="Enter item title..."
-                                                        className="w-full border-b-2 border-black font-bold outline-none mb-2 text-xs uppercase placeholder:text-gray-300"
+                                                        className="w-full bg-transparent border-b border-white/20 text-white text-sm outline-none mb-3 pb-2 placeholder:text-muted-foreground"
                                                         value={newItemTitle}
                                                         onChange={(e) => setNewItemTitle(e.target.value)}
                                                     />
@@ -298,39 +300,41 @@ export default function SharedPage() {
                                                                 setAddingToIndex(null);
                                                                 setNewItemTitle("");
                                                             }}
-                                                            className="flex-1 py-2 text-xs font-bold border border-black hover:bg-gray-50 uppercase"
+                                                            className="flex-1 py-2 text-xs font-medium text-muted-foreground bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
                                                         >
                                                             Cancel
                                                         </button>
                                                         <button
                                                             type="submit"
                                                             disabled={!newItemTitle.trim()}
-                                                            className="flex-1 py-2 text-xs font-bold bg-primary border border-black hover:brightness-110 uppercase disabled:opacity-50"
+                                                            className="flex-1 py-2 text-xs font-medium bg-primary text-background rounded-lg hover:brightness-110 transition-all disabled:opacity-50"
                                                         >
                                                             Add
                                                         </button>
                                                     </div>
                                                 </form>
                                             ) : (
-                                                <button 
+                                                <button
                                                     onClick={() => setAddingToIndex(list._id.toString())}
-                                                    className="w-full py-3 text-xs font-bold uppercase border-b-2 border-black hover:bg-gray-50 flex items-center justify-center gap-1"
+                                                    className="w-full py-2 mb-3 text-xs font-medium text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-1"
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
-                                                    ADD ITEM
+                                                    Add Item
                                                 </button>
                                             )}
 
-                                            {list.items?.map((item, itemIndex) => (
-                                                <ListItem
-                                                    key={itemIndex}
-                                                    item={{
-                                                        ...item,
-                                                        id: `${list._id}-${itemIndex}`,
-                                                    }}
-                                                    onToggle={() => handleToggleItem(list._id.toString(), itemIndex, item.completed)}
-                                                />
-                                            ))}
+                                            <div className="space-y-2">
+                                                {list.items?.map((item, itemIndex) => (
+                                                    <ListItem
+                                                        key={itemIndex}
+                                                        item={{
+                                                            ...item,
+                                                            id: `${list._id}-${itemIndex}`,
+                                                        }}
+                                                        onToggle={() => handleToggleItem(list._id.toString(), itemIndex, item.completed)}
+                                                    />
+                                                ))}
+                                            </div>
                                         </div>
                                     </>
                                 )}

@@ -2,13 +2,13 @@
 
 const TabFilter = ({ activeTab = "all", onTabChange }) => {
     const tabs = [
-        { id: "all", label: "ALL" },
-        { id: "todo", label: "TO DO" },
-        { id: "done", label: "DONE" },
+        { id: "all", label: "All" },
+        { id: "todo", label: "To Do" },
+        { id: "done", label: "Done" },
     ];
 
     return (
-        <div className="flex gap-3 my-6 px-1">
+        <div className="flex gap-2 my-6">
             {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
@@ -16,8 +16,11 @@ const TabFilter = ({ activeTab = "all", onTabChange }) => {
                         key={tab.id}
                         onClick={() => onTabChange?.(tab.id)}
                         className={`
-              px-4 py-2 text-xs font-bold border-2 border-black transition-all
-              ${isActive ? "bg-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]" : "bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"}
+              px-5 py-2.5 text-xs font-medium tracking-wider uppercase rounded-full transition-all
+              ${isActive
+                                ? "bg-primary text-background"
+                                : "bg-white/10 text-muted-foreground hover:bg-white/20 hover:text-white"
+                            }
             `}
                     >
                         {tab.label}

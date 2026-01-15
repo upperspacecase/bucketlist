@@ -41,10 +41,10 @@ export function CategoryFilter({
                                 key={region.id}
                                 onClick={() => setActiveRegion(region.id)}
                                 className={cn(
-                                    "px-4 py-2 text-sm rounded-full border transition-all min-h-[44px] whitespace-nowrap flex-shrink-0",
+                                    "px-4 py-2 text-sm rounded-full transition-all min-h-[44px] whitespace-nowrap flex-shrink-0",
                                     activeRegion === region.id
-                                        ? "bg-foreground text-background border-foreground"
-                                        : "bg-card text-foreground border-border hover:border-muted-foreground"
+                                        ? "bg-primary text-background"
+                                        : "bg-white/10 text-muted-foreground hover:bg-white/20 hover:text-white"
                                 )}
                             >
                                 {region.label}
@@ -64,10 +64,10 @@ export function CategoryFilter({
                                 key={category.id}
                                 onClick={() => setActiveCategory(category.id)}
                                 className={cn(
-                                    "px-4 py-2 text-sm rounded-full border transition-all min-h-[44px] whitespace-nowrap flex-shrink-0",
+                                    "px-4 py-2 text-sm rounded-full transition-all min-h-[44px] whitespace-nowrap flex-shrink-0",
                                     activeCategory === category.id
-                                        ? "bg-foreground text-background border-foreground"
-                                        : "bg-card text-foreground border-border hover:border-muted-foreground"
+                                        ? "bg-primary text-background"
+                                        : "bg-white/10 text-muted-foreground hover:bg-white/20 hover:text-white"
                                 )}
                             >
                                 {category.label}

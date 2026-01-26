@@ -6,7 +6,6 @@ const FeedCard = ({
     date = "Jan 2",
     title = "See the Northern Lights",
     description = "Finally witnessed the aurora in Norway!",
-    image,
     category = "Adventure"
 }) => {
     return (
@@ -14,8 +13,8 @@ const FeedCard = ({
             {/* Header */}
             <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-white/10 overflow-hidden">
-                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user}`} alt={user} className="w-full h-full" />
+                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                        <span className="text-primary font-semibold text-sm">{user.charAt(0).toUpperCase()}</span>
                     </div>
                     <div>
                         <h3 className="font-medium text-sm text-white">{user}</h3>
@@ -27,25 +26,8 @@ const FeedCard = ({
                 </span>
             </div>
 
-            {/* Hero Image */}
-            <div className="w-full aspect-[16/10] bg-secondary relative overflow-hidden">
-                {image ? (
-                    <img src={image} alt={title} className="w-full h-full object-cover" />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-                            <circle cx="9" cy="9" r="2" />
-                            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-                        </svg>
-                    </div>
-                )}
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-            </div>
-
             {/* Content */}
-            <div className="p-4">
+            <div className="p-4 pt-0">
                 <span className="text-[10px] text-primary uppercase tracking-widest">
                     {category}
                 </span>

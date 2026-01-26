@@ -14,7 +14,6 @@ export function ExperienceCard({
     id,
     title,
     location,
-    image,
     category,
     savedCount,
     difficulty,
@@ -35,16 +34,16 @@ export function ExperienceCard({
                 style={{ animationDelay: `${index * 50}ms` }}
                 onClick={() => setExpanded(true)}
             >
-                {/* Image section */}
-                <div className="aspect-[4/3] relative overflow-hidden">
-                    <img
-                        src={image || "/placeholder.svg"}
-                        alt={title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                {/* Header section */}
+                <div className="p-4 pb-2 flex justify-between items-start">
+                    <div>
+                        <p className="text-[10px] tracking-[0.15em] uppercase text-primary mb-1">
+                            {category}
+                        </p>
+                        <h3 className="text-white text-base font-medium leading-snug line-clamp-2">
+                            {title}
+                        </h3>
+                    </div>
 
                     {/* Like button */}
                     <button
@@ -52,7 +51,7 @@ export function ExperienceCard({
                             e.stopPropagation();
                             toggleSaved(id);
                         }}
-                        className="absolute top-3 right-3 p-2.5 bg-black/40 backdrop-blur-sm rounded-full transition-all hover:bg-black/60 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                        className="p-2.5 bg-black/40 backdrop-blur-sm rounded-full transition-all hover:bg-black/60 min-h-[44px] min-w-[44px] flex items-center justify-center"
                         aria-label={liked ? "Remove from favorites" : "Add to favorites"}
                     >
                         <svg
@@ -73,29 +72,15 @@ export function ExperienceCard({
                             <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
                         </svg>
                     </button>
-
-                    {/* Difficulty badge */}
-                    <div className="absolute bottom-3 left-3 px-3 py-1 bg-black/40 backdrop-blur-sm rounded-full text-[10px] tracking-wider uppercase text-white">
-                        {difficultyLabels[difficulty]}
-                    </div>
-
-                    {/* Title overlay at bottom */}
-                    <div className="absolute bottom-3 right-3 left-14">
-                        <h3 className="text-white text-sm font-medium leading-snug text-right line-clamp-2">
-                            {title}
-                        </h3>
-                    </div>
                 </div>
 
                 {/* Content section */}
-                <div className="p-4">
-                    <div className="flex justify-between items-start gap-2">
-                        <div>
-                            <p className="text-[10px] tracking-[0.15em] uppercase text-primary mb-1">
-                                {category}
-                            </p>
-                            <p className="text-sm text-muted-foreground">{location}</p>
-                        </div>
+                <div className="p-4 pt-2">
+                    <p className="text-sm text-muted-foreground mb-3">{location}</p>
+                    <div className="flex justify-between items-center">
+                        <span className="px-3 py-1 bg-black/40 backdrop-blur-sm rounded-full text-[10px] tracking-wider uppercase text-white">
+                            {difficultyLabels[difficulty]}
+                        </span>
                         <p className="text-[11px] text-muted-foreground whitespace-nowrap">
                             {savedCount.toLocaleString()} saved
                         </p>
@@ -141,18 +126,8 @@ export function ExperienceCard({
                             </button>
                         </div>
 
-                        {/* Image */}
-                        <div className="aspect-[16/10] relative">
-                            <img
-                                src={image || "/placeholder.svg"}
-                                alt={title}
-                                className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent"></div>
-                        </div>
-
                         {/* Content */}
-                        <div className="p-6 -mt-8 relative z-10">
+                        <div className="p-6">
                             <p className="text-[11px] tracking-[0.15em] uppercase text-primary mb-2">
                                 {category} · {difficultyLabels[difficulty]}
                             </p>

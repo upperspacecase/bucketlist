@@ -1,91 +1,93 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
-  themes: dark --default;
+  themes: light --default;
 }
 
 @theme {
   --font-sans: "Inter", "Helvetica Neue", sans-serif;
   --font-display: "Inter", "Helvetica Neue", sans-serif;
 
-  /* Dark Cinematic Palette - Disney+ Inspired */
-  --color-background: #0a0a0a;
-  --color-foreground: #ffffff;
+  /* Warm, Human-Centric Palette */
+  --color-background: #faf8f5;
+  --color-foreground: #1a1a1a;
 
-  --color-primary: #c9a227;
-  /* Gold accent */
-  --color-secondary: #1a1a1a;
-  /* Card backgrounds */
-  --color-accent: #c9a227;
-  /* Gold for CTAs */
+  --color-primary: #2b6b4f;
+  --color-primary-light: #e8f0ec;
+  --color-secondary: #f3efe8;
+  --color-accent: #c4723a;
 
-  --color-border: #2a2a2a;
-  --color-muted: #6b6b6b;
-  --color-muted-foreground: #888888;
+  --color-border: #e8e2d9;
+  --color-muted: #8a8078;
+  --color-muted-foreground: #6b6560;
 
-  /* UI Elements */
-  --color-card: #141414;
-  --color-card-foreground: #ffffff;
+  --color-card: #ffffff;
+  --color-card-foreground: #1a1a1a;
 
-  /* Utilities - Rounded corners like streaming apps */
+  --color-success: #2b6b4f;
+  --color-danger: #c4503a;
+
   --radius-none: 0px;
-  --radius-sm: 6px;
-  --radius-md: 10px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
+  --radius-full: 9999px;
 }
 
-/* Base resets */
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
-/* Custom utilities for streaming style */
-.btn-stream {
-  @apply bg-primary text-background font-semibold uppercase tracking-wider rounded-md px-6 py-3 transition-all;
+.card {
+  @apply bg-card rounded-2xl transition-all duration-200;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
-.btn-stream:hover {
-  @apply brightness-110;
+.mobile-container {
+  @apply max-w-md mx-auto min-h-screen bg-background relative;
 }
 
-.btn-stream-outline {
-  @apply bg-transparent border border-white/30 text-white font-medium uppercase tracking-wider rounded-md px-6 py-3 transition-all;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.btn-stream-outline:hover {
-  @apply bg-white/10 border-white/50;
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
-.card-stream {
-  @apply bg-card rounded-lg overflow-hidden transition-transform duration-300;
+@keyframes celebrate {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 
-.card-stream:hover {
-  @apply scale-105;
+.animate-celebrate {
+  animation: celebrate 0.4s ease-in-out;
 }
 
-/* Gradient overlays for cards */
-.gradient-overlay {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary;
 }
 
-/* Hide scrollbar */
+input[type="text"] {
+  @apply bg-transparent text-foreground placeholder:text-muted;
+}
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -93,45 +95,4 @@ h6 {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
-}
-
-/* Layout helpers */
-.mobile-container {
-  @apply max-w-md mx-auto min-h-screen bg-background relative;
-}
-
-/* Glass effect for overlays */
-.glass {
-  @apply bg-white/10 backdrop-blur-xl;
-}
-
-/* Fade animations */
-@keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-slide-up {
-  animation: fadeSlideUp 0.4s ease-out forwards;
-}
-
-/* Section headers */
-.section-header {
-  @apply text-sm tracking-[0.2em] uppercase text-muted-foreground font-medium;
-}
-
-/* Gold link styling */
-.link-gold {
-  @apply text-primary uppercase tracking-wider text-sm font-medium transition-colors;
-}
-
-.link-gold:hover {
-  @apply brightness-125;
 }

@@ -30,7 +30,7 @@ export default function SharedPage() {
             const data = await res.json();
             if (data.sharedLists) setSharedLists(data.sharedLists);
         } catch {
-            toast.error("Failed to load shared lists");
+            toast.error("Couldn't load shared lists");
         } finally {
             setLoading(false);
         }
@@ -49,12 +49,12 @@ export default function SharedPage() {
             const data = await res.json();
             if (data.sharedList) {
                 setSharedLists(prev => [data.sharedList, ...prev]);
-                toast.success("Shared list created!");
+                toast.success("List created!");
                 setNewListName("");
                 setIsCreating(false);
             }
         } catch {
-            toast.error("Failed to create list");
+            toast.error("Couldn't create that list");
         }
     };
 
@@ -71,12 +71,12 @@ export default function SharedPage() {
             const data = await res.json();
             if (data.sharedList) {
                 setSharedLists(prev => prev.map(list => list._id === sharedListId ? data.sharedList : list));
-                toast.success("Item added!");
+                toast.success("Dream added!");
                 setNewItemTitle("");
                 setAddingToIndex(null);
             }
         } catch {
-            toast.error("Failed to add item");
+            toast.error("Couldn't add that");
         }
     };
 
@@ -92,8 +92,11 @@ export default function SharedPage() {
             if (data.sharedList) {
                 setSharedLists(prev => prev.map(list => list._id === sharedListId ? data.sharedList : list));
             }
+            if (!currentStatus) {
+                toast.success("Lived it!");
+            }
         } catch {
-            toast.error("Failed to update item");
+            toast.error("Couldn't update that");
         }
     };
 
@@ -113,9 +116,8 @@ export default function SharedPage() {
             <div className="min-h-screen bg-background pb-24 font-sans text-foreground">
                 <Header />
                 <main className="px-5 pt-6 max-w-md mx-auto">
-                    <div className="text-center py-20 text-muted-foreground">
-                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                        Loading...
+                    <div className="text-center py-20 text-muted">
+                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
                     </div>
                 </main>
                 <BottomNav />
@@ -129,15 +131,19 @@ export default function SharedPage() {
                 <Header />
                 <main className="px-5 pt-6 max-w-md mx-auto">
                     <div className="text-center py-16">
-                        <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        <div className="w-16 h-16 bg-primary-light rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
                             </svg>
                         </div>
-                        <h2 className="text-xl font-semibold text-white mb-2">Shared Lists</h2>
-                        <p className="text-muted-foreground mb-8 max-w-sm mx-auto">Sign in to create shared bucket lists with friends.</p>
+                        <h2 className="text-xl font-semibold text-foreground mb-2">Dream together</h2>
+                        <p className="text-muted-foreground mb-8 max-w-sm mx-auto leading-relaxed">
+                            Sign in to create shared bucket lists with friends and family.
+                        </p>
                         <SignInButton mode="modal">
-                            <button className="px-8 py-4 bg-primary text-background font-semibold rounded-xl hover:brightness-110 transition-all">Sign In to Get Started</button>
+                            <button className="px-8 py-4 bg-primary text-white font-medium rounded-xl hover:brightness-110 transition-all active:scale-[0.98]">
+                                Sign in to start
+                            </button>
                         </SignInButton>
                     </div>
                 </main>
@@ -149,33 +155,43 @@ export default function SharedPage() {
     return (
         <div className="min-h-screen bg-background pb-24 font-sans text-foreground">
             <Header />
-            <main className="px-5 pt-6 max-w-md mx-auto">
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-lg tracking-[0.15em] font-semibold text-white">Shared Lists</h2>
+            <main className="px-5 pt-4 max-w-md mx-auto">
+                <div className="mb-5">
+                    <h2 className="text-xl font-semibold text-foreground">Together</h2>
+                    <p className="text-sm text-muted mt-1">Shared lists with people you love</p>
                 </div>
 
                 {isCreating ? (
-                    <form onSubmit={handleCreateList} className="mb-6 bg-card rounded-xl p-4">
-                        <input autoFocus type="text" placeholder="Enter list name..." className="w-full bg-transparent border-b border-white/20 text-white font-medium outline-none mb-4 pb-2 placeholder:text-muted-foreground" value={newListName} onChange={(e) => setNewListName(e.target.value)} />
+                    <form onSubmit={handleCreateList} className="mb-5 card p-4">
+                        <input
+                            autoFocus
+                            type="text"
+                            placeholder="Name this list..."
+                            className="w-full bg-transparent border-b border-border text-foreground font-medium outline-none mb-4 pb-2 placeholder:text-muted text-sm"
+                            value={newListName}
+                            onChange={(e) => setNewListName(e.target.value)}
+                        />
                         <div className="flex gap-2">
-                            <button type="button" onClick={() => { setIsCreating(false); setNewListName(""); }} className="flex-1 py-3 text-xs font-medium text-muted-foreground bg-white/10 rounded-lg hover:bg-white/20 transition-colors">Cancel</button>
-                            <button type="submit" disabled={!newListName.trim()} className="flex-1 py-3 text-xs font-medium bg-primary text-background rounded-lg hover:brightness-110 transition-all disabled:opacity-50">Create List</button>
+                            <button type="button" onClick={() => { setIsCreating(false); setNewListName(""); }} className="flex-1 py-3 text-sm font-medium text-muted-foreground bg-secondary rounded-lg hover:bg-border transition-colors">Cancel</button>
+                            <button type="submit" disabled={!newListName.trim()} className="flex-1 py-3 text-sm font-medium bg-primary text-white rounded-lg hover:brightness-110 transition-all disabled:opacity-40">Create</button>
                         </div>
                     </form>
                 ) : (
-                    <button onClick={() => setIsCreating(true)} className="w-full py-4 mb-6 border border-dashed border-white/20 rounded-xl font-medium text-muted-foreground hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
-                        Create Shared List
+                    <button onClick={() => setIsCreating(true)} className="w-full py-4 mb-5 border border-dashed border-border rounded-xl font-medium text-muted hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Start a shared list
                     </button>
                 )}
 
                 {loading ? (
-                    <div className="text-center py-10 text-muted-foreground">
-                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                        Loading...
+                    <div className="text-center py-10 text-muted">
+                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
                     </div>
                 ) : sharedLists.length === 0 ? (
-                    <div className="text-center py-10 text-muted-foreground">Create your first shared list!</div>
+                    <div className="text-center py-12 text-muted">
+                        <p className="text-base mb-1">Adventures are better shared</p>
+                        <p className="text-sm text-muted-foreground">Create a list with someone you care about.</p>
+                    </div>
                 ) : (
                     sharedLists.map((list) => {
                         const isExpanded = expandedLists.has(list._id.toString());
@@ -184,8 +200,8 @@ export default function SharedPage() {
                         const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
                         return (
-                            <div key={list._id} className="bg-card rounded-xl overflow-hidden mb-4">
-                                <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/5 transition-colors" onClick={() => toggleListExpanded(list._id.toString())}>
+                            <div key={list._id} className="card overflow-hidden mb-3">
+                                <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-secondary/50 transition-colors" onClick={() => toggleListExpanded(list._id.toString())}>
                                     <div className="flex items-center gap-3">
                                         <div className="flex -space-x-2">
                                             {list.participants?.slice(0, 3).map((userId, idx) => (
@@ -195,29 +211,38 @@ export default function SharedPage() {
                                             ))}
                                         </div>
                                         <div>
-                                            <h3 className="font-medium text-white text-sm">{list.name}</h3>
-                                            <p className="text-[11px] text-muted-foreground">{completedCount}/{totalCount} done</p>
+                                            <h3 className="font-medium text-foreground text-sm">{list.name}</h3>
+                                            <p className="text-xs text-muted">
+                                                {totalCount === 0
+                                                    ? "No dreams yet"
+                                                    : `${completedCount} of ${totalCount} lived`
+                                                }
+                                            </p>
                                         </div>
                                     </div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`text-muted transition-transform ${isExpanded ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6" /></svg>
                                 </div>
 
                                 {isExpanded && (
                                     <>
-                                        <div className="h-1 bg-white/10 mx-4"><div className="h-full bg-primary transition-all duration-500 rounded-full" style={{ width: `${progressPercent}%` }}></div></div>
-                                        <div className="p-4 pt-3 border-t border-white/10 mt-3">
+                                        {totalCount > 0 && (
+                                            <div className="h-1 bg-secondary mx-4">
+                                                <div className="h-full bg-primary transition-all duration-500 rounded-full" style={{ width: `${progressPercent}%` }}></div>
+                                            </div>
+                                        )}
+                                        <div className="p-4 pt-3 border-t border-border mt-2">
                                             {addingToIndex === list._id.toString() ? (
                                                 <form onSubmit={(e) => handleAddItem(list._id.toString(), e)} className="mb-3">
-                                                    <input autoFocus type="text" placeholder="Enter item title..." className="w-full bg-transparent border-b border-white/20 text-white text-sm outline-none mb-3 pb-2 placeholder:text-muted-foreground" value={newItemTitle} onChange={(e) => setNewItemTitle(e.target.value)} />
+                                                    <input autoFocus type="text" placeholder="What do you dream of doing?" className="w-full bg-transparent border-b border-border text-foreground text-sm outline-none mb-3 pb-2 placeholder:text-muted" value={newItemTitle} onChange={(e) => setNewItemTitle(e.target.value)} />
                                                     <div className="flex gap-2">
-                                                        <button type="button" onClick={() => { setAddingToIndex(null); setNewItemTitle(""); }} className="flex-1 py-2 text-xs font-medium text-muted-foreground bg-white/10 rounded-lg hover:bg-white/20 transition-colors">Cancel</button>
-                                                        <button type="submit" disabled={!newItemTitle.trim()} className="flex-1 py-2 text-xs font-medium bg-primary text-background rounded-lg hover:brightness-110 transition-all disabled:opacity-50">Add</button>
+                                                        <button type="button" onClick={() => { setAddingToIndex(null); setNewItemTitle(""); }} className="flex-1 py-2 text-xs font-medium text-muted-foreground bg-secondary rounded-lg hover:bg-border transition-colors">Cancel</button>
+                                                        <button type="submit" disabled={!newItemTitle.trim()} className="flex-1 py-2 text-xs font-medium bg-primary text-white rounded-lg hover:brightness-110 transition-all disabled:opacity-40">Add</button>
                                                     </div>
                                                 </form>
                                             ) : (
-                                                <button onClick={() => setAddingToIndex(list._id.toString())} className="w-full py-2 mb-3 text-xs font-medium text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-1">
+                                                <button onClick={() => setAddingToIndex(list._id.toString())} className="w-full py-2 mb-3 text-xs font-medium text-muted hover:text-primary transition-colors flex items-center justify-center gap-1">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
-                                                    Add Item
+                                                    Add a dream
                                                 </button>
                                             )}
                                             <div className="space-y-2">
